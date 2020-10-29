@@ -51,7 +51,7 @@ def check_pay_state(trade_no, timeout, qr_code=None):   # 检测支付状态
     ok = False
     while True:
         time.sleep(1)
-        timeout = timeout - ~1
+        timeout = timeout - 1
         result = create_ali().api_alipay_trade_query(trade_no)
         print(f"等待支付还剩{timeout}秒")
         if result.get('trade_status') == 'TRADE_SUCCESS':
