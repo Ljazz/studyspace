@@ -66,4 +66,3 @@ $ virtualenv venv # virtualenv 环境的
 $ source venv/bin/active
 (venv)$
 ```
-
