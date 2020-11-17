@@ -1,3 +1,45 @@
+<!-- TOC -->
+
+- [1. React入门](#1-react入门)
+  - [1.1 相关安装及准备](#11-相关安装及准备)
+    - [1.1.1 下载与使用Node.js和NPM](#111-下载与使用nodejs和npm)
+    - [1.1.2 模块打包工具之Webpack](#112-模块打包工具之webpack)
+    - [1.1.3 Webpack配置详解](#113-webpack配置详解)
+    - [1.1.4 ES6语法](#114-es6语法)
+  - [1.2 React简介](#12-react简介)
+  - [1.3 React的特征](#13-react的特征)
+    - [1.3.1 组件化](#131-组件化)
+    - [1.3.2 虚拟DOM](#132-虚拟dom)
+    - [1.3.3 单向数据流](#133-单向数据流)
+  - [1.4 JSX语法](#14-jsx语法)
+    - [1.4.1 JSX简介](#141-jsx简介)
+    - [1.4.2 JSX的转义](#142-jsx的转义)
+    - [1.4.3 JSX的用法](#143-jsx的用法)
+- [2. React的组件](#2-react的组件)
+  - [2.1 组件的声明方式](#21-组件的声明方式)
+    - [2.1.1 ES5写法：React.createClass()](#211-es5写法reactcreateclass)
+    - [2.1.2 ES6写法：React.Component](#212-es6写法reactcomponent)
+    - [2.1.3 无状态组件](#213-无状态组件)
+  - [2.2 组件的主要成员](#22-组件的主要成员)
+    - [2.2.1 状态（state）](#221-状态state)
+    - [2.2.2 属性（props）](#222-属性props)
+    - [2.2.3 render()方法](#223-render方法)
+  - [2.3 组件之间的通信](#23-组件之间的通信)
+    - [2.3.1 父组件向子组件通信](#231-父组件向子组件通信)
+    - [2.3.2 子组件向父组件通信](#232-子组件向父组件通信)
+    - [2.3.3 跨级组件通信](#233-跨级组件通信)
+    - [2.3.4 非嵌套组件通信](#234-非嵌套组件通信)
+  - [2.4 组件的生命周期](#24-组件的生命周期)
+    - [2.4.1 组件的挂载](#241-组件的挂载)
+    - [2.4.2 数据的更新过程](#242-数据的更新过程)
+    - [2.4.3 组件的卸载（unmounting）](#243-组件的卸载unmounting)
+    - [2.4.4 错误处理](#244-错误处理)
+    - [2.4.6 生命周期整体流程总结](#246-生命周期整体流程总结)
+  - [2.5 React组件分类](#25-react组件分类)
+  - [2.5.1 木偶组件和智能组件](#251-木偶组件和智能组件)
+
+<!-- /TOC -->
+
 # 1. React入门
 
 ## 1.1 相关安装及准备
@@ -1616,3 +1658,59 @@ import ErrorBoundary extends React.Component{
 ### 2.4.6 生命周期整体流程总结
 
 ![React组件生命周期图](./images/React组件生命周期流程图.jpg)
+
+## 2.5 React组件分类
+
+## 2.5.1 木偶组件和智能组件
+
+木偶组件和智能组件
+
+```js
+class CommentList extend React.Component{
+  constructor(props){
+    super(props);
+  }
+  render(){
+    console.log(this.props);
+    return(
+      <ul>
+        {this.props.languages.map(function(language){
+          return(
+            <ul key={language.id}>
+              <li>{language.name}</li>
+            </ul>
+          );
+        })}
+      </ul>
+    );
+  }
+}
+
+// 智能组件
+class CommentContainer extends React.Component{
+  constructor(){
+    super();
+    this.state = {
+      languages: []
+    };
+  }
+  componentDidMount(){
+    $.ajax({
+      url: "data.json",
+      dataType: 'json',
+      success: function(language){
+        this.setSate({languages: language});
+      }.bind(this)
+    });
+  }
+  render(){
+    return <CommentList languages={this.state.languages} />
+  }
+}
+```
+
+木偶组件和智能组件也称作呈现组件(Presentational Component)和容器组件(Container Component)。
+
+木偶组件的特点：只关注UI呈现，不关心数据操作及来源，更像是一个UI接口。通常没有自己的state属性，数据主要通过props来获取。
+
+智能组件的特点：只关注事务逻辑操作，有自己的state，并且不关注UI怎么呈现。

@@ -6,6 +6,6 @@
         "**/.settings": true,
         "**/.factorypath": true
     },
-    "python.dataScience.jupyterServerURI": "local",
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "jupyter.jupyterServerType": "local"
 }
