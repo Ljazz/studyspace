@@ -1,3 +1,20 @@
+<!-- TOC -->
+
+- [React+Redux的数据流管理](#reactredux的数据流管理)
+  - [1. Flux架构](#1-flux架构)
+    - [1.1 MVC和MVVM](#11-mvc和mvvm)
+    - [1.2 Flux](#12-flux)
+    - [1.3 Flux缺点](#13-flux缺点)
+  - [2. Redux状态管理工具](#2-redux状态管理工具)
+    - [2.1 Redux简介](#21-redux简介)
+    - [2.2 Redux三大特性](#22-redux三大特性)
+    - [2.3 Redux的组成](#23-redux的组成)
+    - [2.4 Redux搭配React使用](#24-redux搭配react使用)
+  - [3 middleware中间件](#3-middleware中间件)
+    - [3.1 什么是middleware](#31-什么是middleware)
+
+<!-- /TOC -->
+
 # React+Redux的数据流管理
 
 ## 1. Flux架构
