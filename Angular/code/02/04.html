@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+    <meta charset="utf-8">
+    <title>价格计算器</title>
+    <script src="../angular.js"></script>
+</head>
+<body>
+    <div ng-controller="myCtrl">
+        <div>单价：<input type="number" ng-model="price"></div><br>
+        <div>数量：<input type="number" ng-model="num"></div><br>
+        <div>总价：{{totalPrice()}}</div>
+    </div>
+    <script>
+        function CalcController($scope){
+            $scope.price = 10;
+            $scope.num = 1;
+            $scope.totalPrice = function(){
+                return $scope.price * $scope.num;
+            }
+        }
+        var app = angular.module('myApp', []);
+        app.controller("myCtrl", CalcController)
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+    <meta charset="utf-8">
+    <title>价格计算器</title>
+    <script type="text/javascript" src="../angular.js"></script>
+</head>
+<body ng-init="price=10;num=1">
+    <div>单价：<input type="number" ng-model="price" /></div><br />
+    <div>数量：<input type="number" ng-model="num" /></div><br />
+    <div>总价：{{price * num}}</div>
+</body>
+</html>
