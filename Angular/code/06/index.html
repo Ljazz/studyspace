@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="routeModule">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <script src="../angular.js"></script>
+    <scri src="../angular-route.js"></scri>
+    <script>
+        var routeModule = angular.module('routeModule', ['ngRoute']);
+routeModule.controller('AddOrderController', function($scope){$scope.$route = $route;}).controller('ShowOrdersController', function($scope){$scope.$route=$route;}).config(['$routeProvider',
+    function ($routeProvider) {
+        $routeProvider.
+            when('/addOrder', {
+                templateUrl: './templates/add-order.html',
+                controller: 'AddOrderController'
+            }).
+            when('/showOrders', {
+                templateUrl: './templates/show-orders.html',
+                controller: 'ShowOrdersController'
+            }).
+            otherwise({
+                redirectTo: '/addOrder'
+            });
+    }]);
+    </script>
+    <script src="./app.js"></script>
+    <style type='text/css'>
+    .mainDiv{
+        margin: 25px 50px 75px 100px;
+    }
+    </style>
+</head>
+<body>
+    <div class="mainDiv">
+        <!--导航栏-->
+        <ul class="nav nav-tabs">
+            <li><a href="#/showOrders">订单列表</a></li>
+            <li><a href="#/addOrder">新增订单</a></li>
+        </ul>
+        <div ng-view></div>
+    </div>
+</body>
+</html>
