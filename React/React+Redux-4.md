@@ -231,7 +231,9 @@ react-router可以实现路由的嵌套，嵌套路由被描述成一种树形�
 <Route path='child1' component={Child1} />
 <Route path='child2' component={Child2} />
 </Route>
+```
 
+```js
 // v4
 <Route path='parent' component={Parent} />
 const Parent = () => (
