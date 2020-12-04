@@ -90,7 +90,120 @@ NoSQL的4种数据模型如下
 
 # 2. 认识Redis
 
+## 2.1 Redis简介
+
+### 1、什么是Redis
+
+Redis是用C语言开发的一款开源的、高性能的键值对存储数据库，采用了BSD协议，为了适应不同场景下的存储需求，提供了多种键值数据类型。
+
+Redis支持的键值数据类型有字符串、列表、有序集合、散列和集合等。
+
+### 2、Redis特性
+
+1. 支持多种计算机编程语言
+2. 具有丰富的数据类型，如String、List、Set、Hash、Sorted Set等
+3. 支持多种数据结构，如哈希、集合、位图(多用于活跃用户数等的统计)、HyperLogLog（超小内存唯一值计数，由于只有12KB，因而是有一定误差范围的）、GEO（地理信息定位）。
+4. 读/写速度快，性能高。
+5. 支持持久化。Redis的持久化也就是备份数据，每隔一段时间将内存种的数据保存在磁盘中，在重启的时候会再次加载到内存中，从而实现数据持久化。Redis的持久化方式是RDB和AOF。
+6. 简单且功能强大。
+7. 实现高可用主从复制，主节点做数据副本。
+8. 实现分布式集群和高可用。Redis Cluster支持分布式，进而可以实现分布式集群；Redis Sentinel支持高可用。
+
+### 3、Redis使用场景
+
+1. 做缓存。
+2. 做计数器应用。
+3. 实现消息队列系统。
+4. 做实时系统、消息系统
+5. 实现排行榜应用
+6. 做数据过期处理
+7. 做大型社交网络。
+8. 分布式集群架构中的session分离。
+
+## 2.2 搭建Redis环境
+
+Windows环境下载地址：https://github.com/MicrosoftArchive/redis/releases
+
+Linux环境下载地址：http://www.redis.net.cn/download/
+
+### 1、Windows环境下搭建
+
+1、下载Redis安装包
+
+![下载页面](./images/redis下载页面.png)
+
+2、解压压缩包
+
+![解压缩目录](./images/Redis解压缩目录.png)
+
+**注意**：也可以下载`.msi`文件，直接双击打开进行安装。
+
+文件介绍：
+- redis-server.exe：服务端程序，提供 redis 服务
+- redis-cli.exe: 客户端程序，通过它连接 redis 服务并进行操作
+- redis-check-dump.exe：RDB 文件修复工具
+- redis-check-aof.exe：AOF 文件修复工具
+- redis-benchmark.exe：性能测试工具，用以模拟同时由 N 个客户端发送 M 个 SETs/GETs 查询 (类似于 Apache 的 ab 工具)
+- redis.windows.conf： 配置文件，将 redis 作为普通软件使用的配置，命令行关闭则 redis 关闭
+- redis.windows-service.conf：配置文件，将 redis 作为系统服务的配置
+
+3、运行cmd，cd进入解压目录，执行
+
+> redis-server.exe redis.windows.conf
+
+![运行](./images/redis命令行运行.png)
+
+4、安装redis到Windows服务
+
+> redis-server --service-install redis.windows.conf
+
+- 启动服务：`redis-server --service-start`
+- 停止服务：`redis-server --service-stop`
+
+### 2、Linux环境下搭建
+
+```
+root@iZpr21qe3dl1aaZ:~# cd /usr/local     # 进入/usr/localmul
+root@iZpr21qe3dl1aaZ:~# mkdir redis       # 创建redis目录
+root@iZpr21qe3dl1aaZ:~# cd redis          # 进入redis目录
+root@iZpr21qe3dl1aaZ:~# wget http://download.redis.io/releases/redis-4.0.9.tar.gz
+root@iZpr21qe3dl1aaZ:~# tar -zxvf redis-4.0.9.tar.gz    # 解压压缩包
+root@iZpr21qe3dl1aaZ:~# cd redis-4.0.9      # 进入目录
+root@iZpr21qe3dl1aaZ:~# make                # 进行编译
+root@iZpr21qe3dl1aaZ:~# make install        # 进行安装
+```
+
+## 2.3 Redis客户端
+
+### 1、命令行客户端
+
+Redis的命令行客户端`redis-cli`(Redis Command Line Interface)是Redis自带的基于命令行的客户端，主要用于与服务器端进行交互。
+
+### 2、可视化客户端
+
+Redis可视化客户端也称远程客户端，可以连接远程Redis数据库进行操作。
+
+两款可视化工具：
+- [Redis Desktop Manager(RDM)](https://redisdesktop.com/download)
+- [TreeSoft数据库管理系统TreeDMS](http://www.treesoft.cn/dms.html)
+
+
 # 3. Redis数据类型
+
+> 目前redis数据库支持5种数据类型，分别是String(字符串)、Hash(哈希)、List(列表)、Set(集合)及Sorted Set(有序集合)
+
+## 3.1 字符串（String）命令
+
+
+## 3.2 哈希（Hash）命令
+
+
+## 3.3 列表（List）命令
+
+## 3.4 集合（Set）命令
+
+## 3.5 有序集合（Sorted Set）
+
 
 # 4. Redis必备命令
 

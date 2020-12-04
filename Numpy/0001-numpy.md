@@ -81,6 +81,10 @@ numpy.random模块常用函数
 | numpy.random.seed | 设置随机数种子 |
 | random_sample | 生成随机的浮点数 |
 
+```
+
+```
+
 ## 创建特定形状的多维数组
 
 参数
