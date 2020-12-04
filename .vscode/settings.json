@@ -7,5 +7,6 @@
         "**/.factorypath": true
     },
     "git.ignoreLimitWarning": true,
-    "jupyter.jupyterServerType": "local"
+    "jupyter.jupyterServerType": "local",
+    "python.formatting.provider": "black"
 }
