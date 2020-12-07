@@ -1,5 +1,6 @@
 # 1. 初识NoSQL
 
+
 ## 1.1 什么是NoSQL
 
 NoSQL是Not Only SQL的缩写，也是众多非关系型数据库的统称。NoSQL和关系型数据库一样，也是用来存储数据的仓库。
@@ -193,6 +194,390 @@ Redis可视化客户端也称远程客户端，可以连接远程Redis数据库�
 > 目前redis数据库支持5种数据类型，分别是String(字符串)、Hash(哈希)、List(列表)、Set(集合)及Sorted Set(有序集合)
 
 ## 3.1 字符串（String）命令
+
+字符串类型是Redis种最基本的数据类型，它是二进制安全的，任何形式的字符串都可以存储，包括二进制数据、序列化后的数据、JSON化的对象，甚至是一张经Base64编码后的图片。String类型的键最大能存储512MB的数据。
+
+Redis字符串类型的相关命令用于管理Redis的字符串。
+
+### 3.1.1、设置键值对
+
+#### 1、SET命令：设置键值对
+
+**命令格式**：`SET key value [EX seconds [PX milliseconds] [NX|XX]`
+
+SET命令将字符串值value设置到key种。若key存在，将会覆盖原来的旧值，并且是忽略类型的。针对某个带有时间的key来说，当SET命令执行成功时，这个key上的生存时间会被清除。
+
+SET命令的可选参数
+- EX seconds：用于设置key的过期时间为多少秒(seconds)。其中，`SET key value EX seconds`等价于`SETEX key seconds value`。
+- PX milliseconds：用于设置key的过期时间为多少毫秒(milliseconds)。其中，`SET key value PX milliseconds`相当于`PSETEX key milliseconds value`。
+- NX：表示当key不存在时，才对key进行设置操作。其中，`SET key value NX`等价于`SETNX key value`.
+- XX：表示当key存在时，才对key进行设置操作。
+
+**返回值**：如果SET命令设置成功，则会返回OK。如果设置了NX或XX，但因为条件不足而设置失败，则会返回空批量回复(NULL Bulk Reply)。
+
+```
+127.0.0.1:0>SET stuName-1 '刘河飞'
+"OK"
+127.0.0.1:0>SET stuID-1 20180001
+"OK"
+127.0.0.1:0>SET age-1 22
+"OK"
+127.0.0.1:0>SET sex-1 '男'
+"OK"
+127.0.0.1:0>SET height-1 171
+"OK"
+127.0.0.1:0>SET weight-1 75
+"OK"
+127.0.0.1:0>SET className-1 '软件工程1班'
+```
+
+#### 2、MSET命令：设置多个键值对
+
+**命令格式**：`MSET key value [key value...]`
+
+使用MSET命令同时设置多个键值对。若某个key已经存在，那么MSET命令会用新值覆盖旧值。MSET命令是一个原子性操作，所有给定key都会在同一时间内被设置更新，不存在在某些key被更新了而另一些key没有被更新的情况。
+
+**返回值**：总是返回OK，因为MSET命令不可能设置失败。
+
+```
+127.0.0.1:0>MSET stuName-2 '赵雨梦' stuID-2 20181762 age-2 24 sex-2 '女' height-2 175 weight-2 73 birthday-2 1994-04-23 className-2 '网络工程1班'
+"OK"
+127.0.0.1:0>MSET stuName-3 '宋飞' stuID-3 20180023 age-3 23 sex-3 '男' height-3 168 weight-3 67 birthday-3 1995-08-18 className-3 '网络工程1班'
+"OK"
+```
+
+#### 3、SETNX命令：设置不存在的键值对
+
+**命令格式**：`SETNX key value`
+
+SETNX是`set if not exists`的缩写。如果key不存在，则设置值，当且仅当key不存在时。如果key已经存在，则SETNX什么也不做。
+
+**返回值**：SETNX命令设置成功过返回1，设置失败返回0
+
+```
+127.0.0.1:0>SETNX collegeName '计算机学院'
+"1"
+127.0.0.1:0>SETNX collegeName '计算机工程学院'
+"0"
+```
+
+#### 4、MSETNX命令：设置多个不存在的键值对
+
+**命令格式**：`MSETNX key value [key value...]`
+
+使用MSETNX命令同时设置多个键值对，当且仅当所有给定key都不存在时设置。若有一个给定的key已经存在，那么MSETNX命令也会拒绝执行所有给定key的设置操作。MSETNX命令是原子性的，它可以用来设置多个不同key表示不同字段的唯一性逻辑对象，所有字段要么全部被设置，要么全部设置失败。
+
+**返回值**：所有key设置成功返回1；如果所有给定key都设置失败，返回0
+
+```
+127.0.0.1:0>MSETNX Chinese-teacher '郭涛' Math-teacher '杨艳' English-teacher '吴芳'
+"1"
+127.0.0.1:0>MSETNX Chinese-teacher '陈城' Math-teacher '杨小艳'
+"0"
+```
+
+### 3.1.2、获取键值对
+
+#### 1、GET命令：获取键值对的值
+
+**命令格式**：`GET key`
+
+使用GET命令获取key中设置的字符串值。如果key中存储的值不是字符串类型的，则会返回一个错误，因为GET命令只能用于处理字符串的值；当key不存在时，返回null。
+
+**返回值**：当key存在时，返回key所对应的值；如果key不存在，返回null；如果key不是字符串类型的，返回错误。
+
+```
+127.0.0.1:0>GET stuID-1
+"20180001"
+127.0.0.1:0>GET stuName-1
+"刘河飞"
+127.0.0.1:0>GET age-1
+"22"
+127.0.0.1:0>GET sex-1
+"男"
+127.0.0.1:0>GET height-1
+"171"
+127.0.0.1:0>GET weight-1
+"75"
+127.0.0.1:0>GET birthday-1
+null
+127.0.0.1:0>GET className-1
+"软件工程1班"
+```
+
+#### 2、MGET命令：获取多个键值对的值
+
+**命令格式**：`MGET key [key ...]`
+
+使用MGET命令同时返回多个给定key的值，key之间使用空格隔开。如果在给定的key中有不存在的key，那么这个key返回的值为null。
+
+**返回值**：一个包含所有给定key的值的列表
+
+```
+127.0.0.1:0>MGET stuName-1 stuID-1 age-1 sex-1 height-1 weight-1 birthday-1 className-1
+ 1)  "刘河飞"
+ 2)  "20180001"
+ 3)  "22"
+ 4)  "男"
+ 5)  "171"
+ 6)  "75"
+ 7)  null
+ 8)  "软件工程1班"
+```
+
+#### 3、GETRANGE命令：获取键的子字符串值
+
+**命令格式**：`GETRANGE key start end`
+
+使用GETRANGE命令来获取key中字符串值从start开始到end结束的子字符串，小标从0开始（字符串截取）。start和end参数是整数，可以取负值。当取负值时，表示从字符串最后开始计数，-1表示最后一个字符，-2表示倒数第二个字符，依此类推。
+
+**返回值**：返回截取的子字符串。
+
+```
+127.0.0.1:0>SET motto "this a content that is test what is a 'getrange' command"
+"OK"
+127.0.0.1:0>GETRANGE motto 0 100
+"this a content that is test what is a 'getrange' command"
+127.0.0.1:0>GETRANGE motto -8 -1
+" command"
+127.0.0.1:0>GETRANGE motto 0 -3
+"this a content that is test what is a 'getrange' comma"
+```
+
+### 3.1.3 键值对的偏移量
+
+#### 1、SETBIT命令：设置键的偏移量
+
+**命令格式**：`SETBIT key offset value`
+
+使用SETBIT命令对可以所存储的字符串值设置或清除指定偏移量上的位(bit)。vlaue参数值决定了位的设置或清除，value值取0或1。当key不存在时，自动生成一个新的字符串值。这个字符串时动态的，可以扩展，以确保将value保存到指定的偏移量上。当这个字符串扩展时，使用0来填充空白位置。offset参数必须时大于或等于0，并且小于2^32(bit映射被限制在512MB之内)的正整数。默认情况下，bit初始化为0.
+
+**返回值**：返回指定偏移量原来存储的位。
+
+```
+127.0.0.1:0>SETBIT stuName-1 6 1
+"0"
+127.0.0.1:0>SETBIT stuName-1 7 0
+"1"
+127.0.0.1:0>SETBIT collegeName 100 0
+"1"
+```
+
+
+### 2、GETBIT命令：获取键的偏移量值
+
+**命令格式**：`GETBIT key offset`
+
+对可以所存储的字符串值，使用GETBIT命令来获取指定偏移量上的位(bit)。当offset的值超过了字符串的最大长度，或者key不存在时，返回0。
+
+**返回值**：返回字符串值指定偏移量上的位(bit)。
+
+```
+47.93.11.106:0>GETBIT stuName-1 6
+"1"
+47.93.11.106:0>GETBIT suName-1 7
+"0"
+47.93.11.106:0>GETBIT collegeName 100
+"0"
+```
+
+### 3.1.4 设置键的生存时间
+
+#### 1、SETEX命令：为键设置生存时间（秒）
+
+**命令格式**：`SETEX key seconds value`
+
+使用SETEX命令将value值设置到key中，并设置key的生存时间为多少秒(seconds)。如果key已经存在，则SETEX命令将覆写旧值。
+
+等价于`SET key value EXPIRE key seconds`
+
+SETEX命令是一个原子性命令，它设置value与设置生成时间是在同一时间完成的。
+
+**返回值**：设置成功时，返回OK；当seconds参数不合法时，返回错误。
+
+```
+47.93.11.106:0>SETEX schoolName 100 '清华大学'
+"OK"
+47.93.11.106:0>GET schoolName
+"清华大学"
+47.93.11.106:0>TTL schoolName
+"79"
+47.93.11.106:0>GET schoolName
+"清华大学"
+47.93.11.106:0>TTL schoolName
+"63"
+47.93.11.106:0>TTL schoolName
+"12"
+47.93.11.106:0>TTL schoolName
+"-2"
+47.93.11.106:0>GET schoolName
+null
+```
+
+#### 2、PSETEX命令：为键设置生存时间（毫秒）
+
+**命令格式**：`PSETEX key milliseconds value`
+
+使用PSETEX命令设置key的生存时间，以毫秒为单位。设置成功时返回OK。
+
+```
+47.93.11.106:0>PSETEX school_address 30000 '北京'  # 设置学校地址为北京，生存时间为30000毫秒
+"OK"
+47.93.11.106:0>GET school_address   # 获取学校地址
+"北京"
+47.93.11.106:0>PTTL school_address  # 查看学校地址剩余多少生存时间（毫秒）
+"7169"
+47.93.11.106:0>GET school_address
+null
+```
+
+### 3.1.5 键值对的值操作
+
+#### 1、SETRANGE命令：替换键的值
+
+**命令格式**：`SETRANGE key offset value`
+
+使用SETRANGE命令从指定的位置(offset)开始将key的值替换为新的字符串。若key不存在，就当空白字符串处理。若给定key原始存储的字符串长度比偏移量小，那么源字符串和偏移量之间的空白用零字节（Zerobytes，"\x00"）来填充。
+
+**返回值**：返回执行SETRANGE命令之后的字符串长度
+
+```
+47.93.11.106:0>SET mykey "hello world"
+"OK"
+47.93.11.106:0>GET mykey
+"hello world" 
+47.93.11.106:0>SETRANGE mykey 5 Redis
+"11"
+47.93.11.106:0>GET mykey
+"helloRedisd"
+```
+
+#### 2、GETSET命令：为键设置新值
+
+**命令格式**：`GETSET key value`
+
+使用GETSET命令将给定key的值设置为value，并返回key的旧值。当key存在但不是字符串类型时，将会返回错误。
+
+**返回值**：返回给定key的旧值。如果key不存在，则返回null；如果key存在但不是字符串类型的，则返回错误。
+
+```
+47.93.11.106:0>EXISTS motto
+"0"
+47.93.11.106:0>GETSET motto "没有存款，就是拼的理由"
+null
+47.93.11.106:0>GET motto
+"没有存款，就是拼的理由"
+47.93.11.106:0>GETSET motto "拼个春夏秋冬，赢个无悔人生"
+"没有存款，就是拼的理由"
+47.93.11.106:0>GET motto
+"拼个春夏秋冬，赢个无悔人生"
+```
+
+#### APPEND命令：为键追加值
+
+**命令格式**：`APPEND key value`
+
+如果key存在且是字符串类型，则将value追加到key旧值的末尾。如果key不存在，将key设置值为value。
+
+**返回值**：返回追加value之后，key中字符串的长度。
+
+```
+47.93.11.106:0>GET motto
+"拼个春夏秋冬，赢个无悔人生"
+47.93.11.106:0>APPEND motto "，努力过，拼搏过..."
+"66"
+47.93.11.106:0>GET motto
+"拼个春夏秋冬，赢个无悔人生，努力过，拼搏过..."
+```
+
+### 3.1.6 键值对的计算
+
+#### 1、BITCOUNT命令：计算比特位数量
+
+**命令格式**：`BITCOUNT key [start] [end]`
+
+使用BITCOUNT命令计算在给定的字符串中被设置为1的比特位数量。有两个参数：start和end。如果不设置这两个参数，则表示对整个字符串进行计数；如果指定了这两个参数，是在这个范围内计数。若key不存在，会被当作空字符串处理，计数结果为0。
+
+**返回值**：执行BITCOUNT命令之后，返回被设置为1的位的数量。
+
+```
+47.93.11.106:0>SET stuName '赵云'
+"OK"
+47.93.11.106:0>BITCOUNT stuName
+"26"
+47.93.11.106:0>BITCOUNT stuName 0 10
+"26"
+47.93.11.106:0>BITCOUNT stuName 0 13
+"26"
+47.93.11.106:0>BITCOUNT stuName 0 3
+"18"
+```
+
+#### 2、BITOP命令：对键进行位元运算
+
+**命令格式**：`BITOP operation destkey key [key...]`
+
+使用BITOP命令对一个或多个保存二进制位的字符串key进行位元运算，并将运算结果保存到destkey中。operation表示位元运算操作符，可以是AND、OR、NOT、XOR4种操作种的任意一种。
+
+- `BITOP AND destkey key [key...]`：表示对一个或多个key求逻辑并，并将结果保存到destkey中。
+- `BITOP OR destkey key [key...]`：表示对一个或多个key求逻辑或，并将结果保存到destkey中。
+- `BITOP NOT destkey key`：表示对给定的key求逻辑非，并将结果保存到destkey中。
+- `BITOP XOR destkey key [key...]`：表示对一个或多个key求逻辑异或，并将结果保存到destkey中。
+
+除了NOT操作外，其余的操作都是可以接收一个或多个key作为参数。当使用BITOP命令来进行不同长度的字符串的位元运算时，较短的字符串所缺少的部分会被看作0。空key也被看作包含0的字符串序列。
+
+**返回值**：返回保存到destkey中的字符串的长度，这个长度和输入key中最长的字符串的长度相等。
+
+```
+47.93.11.106:0>SETBIT age 0 1
+"0"
+47.93.11.106:0>SETBIT age1 3 1
+"0"
+47.93.11.106:0>BITOP AND result age age1
+"1"
+47.93.11.106:0>GET result
+"\x00"
+47.93.11.106:0>BITOP OR result age age1
+"1"
+47.93.11.106:0>GET result
+"\x90"
+47.93.11.106:0>BITOP NOT result age age1
+"ERR BITOP NOT must be called with a single source key."
+47.93.11.106:0>BITOP NOT result age
+"1"
+47.93.11.106:0>GET result
+"\x7F"
+47.93.11.106:0>BITOP XOR result age age1
+"1"
+47.93.11.106:0>GET result
+"\x90"
+47.93.11.106:0>GETBIT age 0
+"1"
+47.93.11.106:0>BITCOUNT age
+"1"
+47.93.11.106:0>BITCOUNT age1
+"1"
+```
+
+#### 3、STRLEN命令：统计键的值的字符长度
+
+**命令格式**：`STRLEN key`
+
+使用命令STRLEN统计key的值的字符长度。当key存储的不是字符串时，返回一个错误，当key不存在时，返回0。
+
+```
+47.93.11.106:0>GET motto
+"拼个春夏秋冬，赢个无悔人生，努力过，拼搏过..."
+47.93.11.106:0>STRLEN motto
+"66"
+```
+
+### 3.1.7 键值对的值增量
+
+#### 1、DECR命令：让键的值减1
+
+**命令格式**：`DECR key`
+
 
 
 ## 3.2 哈希（Hash）命令
