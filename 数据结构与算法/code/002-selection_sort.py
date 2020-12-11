@@ -20,6 +20,15 @@ def selection_sort_2(nums):
     print(res)
 
 
+def selection_sort_3(nums):
+    res = []
+    while nums:
+        min_num = min(nums)
+        res.append(min_num)
+        nums.remove(min_num)
+    return []
+
+
 if __name__ == "__main__":
     nums = [5, 3, 6, 4, 1, 2, 8, 7]
     print('原始数组...')
