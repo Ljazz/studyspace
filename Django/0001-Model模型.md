@@ -1,6 +1,6 @@
 # Model模型
 
-## 什么是Model模型
+## 1、什么是Model模型
 
 Model(模型)就是数据模型。模型不是数据本身，而是抽象的描述数据的构成和逻辑关系。每个Django model实际上就是一个类，继承了models.Model。每个Model包含属性，关系和方法。当定义好model后，Django提供的一个接口会自动在数据库生成相应的数据表（table）。一般来说，每一个模型都映射一张数据库表。
 
@@ -19,9 +19,47 @@ class Album(models.Model):
     num_stars = models.IntegerField()
 ```
 
-## 字段选项
+模型在使用的时候，需要将模型所在的`app`添加到`setting.py`文件中的`INSTALLED_APPS`中，然后通过命令`python manage.py makemigrations`和`python manage.py migrate`。可以将模型同步到数据库中。
 
-一些通用参数
+## 2、字段
+
+### 2.1、字段类型
+
+模型中每个字段都应该是某个`Field`类的实例。这些字段类的作用有
+- 字段类型用以指定数据库数据类型
+
+| 字段类型 | 含义 |
+| :---: | --- |
+| AutoField | 
+| BigAutoField | 
+| BigIntegerField | 
+| BinaryField | 
+| BooleanField | 
+| CharField | 
+| DateField | 
+| DateTimeField | 
+| DecimalField | 
+| DurationField | 
+| EmailField | 
+| FileField | 
+| FieldFile | 
+| FilePathField | 
+| FloatField | 
+| ImageField | 
+| IntegerField | 
+| GenericIPAddressField | 
+| NullBooleanField | 
+| PositiveIntegerField | 
+| PositiveSmallIntegerField | 
+| SlugField | 
+| SmallAutoField | 
+| SmallIntegerField | 
+| TextField | 
+| TimeField | 
+| URLField | 
+| UUIDField | 
+
+### 2.2、字段选项
 
 1、null
 
@@ -104,7 +142,8 @@ class Runner(models.Model):
 
 为改字段添加备注名称
 
-## 字段类型
+9、db_column
+
 
 ## 关联关系
 

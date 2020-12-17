@@ -29,6 +29,5 @@ async def root():
 - `app`：在`main.py`文件中通过`app = FastAPI()`
 - `--reload`：让服务器在更新代码后重启。
 
-查看
+OpenAPI
 
-打开浏览器访问`http://`
