@@ -81,3 +81,4 @@ if __name__ == '__main__':
     qr_code = create_qr_code(trade_no, price, subject, '')
     print(qr_code)
     check = check_pay_state(trade_no, 60)
+    sorted()
