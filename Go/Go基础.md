@@ -43,6 +43,33 @@
   - [2. 键盘输入](#2-键盘输入)
     - [1、fmt包读取键盘输入](#1fmt包读取键盘输入)
     - [2. bufio包读取](#2-bufio包读取)
+- [3、分支语句](#3分支语句)
+  - [3.1 程序的流程结构](#31-程序的流程结构)
+  - [3.2 条件语句](#32-条件语句)
+    - [1、if语句](#1if语句)
+    - [2、if变体](#2if变体)
+    - [3、switch语句](#3switch语句)
+    - [4、fallthrough](#4fallthrough)
+    - [5、Type Switch](#5type-switch)
+- [4、循环语句](#4循环语句)
+  - [4.1 for语句](#41-for语句)
+  - [4.2 for循环变体](#42-for循环变体)
+  - [4.3 跳出循环的语句](#43-跳出循环的语句)
+    - [1、break语句](#1break语句)
+    - [2、continue语句](#2continue语句)
+  - [4.4 goto语句](#44-goto语句)
+- [5、数组](#5数组)
+  - [5.1 什么是数组](#51-什么是数组)
+  - [5.2 数组的语法](#52-数组的语法)
+- [6、Slice的使用](#6slice的使用)
+- [7、Map的使用](#7map的使用)
+- [8、string](#8string)
+- [9、函数](#9函数)
+- [10、包管理](#10包管理)
+- [11、指针](#11指针)
+- [12、结构体](#12结构体)
+- [13、方法、接口、OOP编程、type](#13方法接口oop编程type)
+- [14、错误处理](#14错误处理)
 
 <!-- /TOC -->
 
@@ -938,3 +965,455 @@ func main() {
 }
 ```
 
+# 3、分支语句
+
+## 3.1 程序的流程结构
+
+程序的流程控制结构一共有三种：顺序结构，选择结构，循环结构
+- 顺序结构：从上向下，逐行执行
+- 选择结构：条件满足，某些代码才会执行。0-1次
+  - 分支语句：if，switch，select
+- 循环结构：条件满足，某些代码会被反复的执行多次。0-N次
+  - 循环语句：for
+
+## 3.2 条件语句
+
+### 1、if语句
+
+语法格式：
+
+```go
+if 布尔表达式{
+  /* 在布尔表达式为 true 时执行 */
+}
+```
+
+```go
+if 布尔表达式{
+  /* 在布尔表达式为 true 时执行 */
+} else {
+  /* 在布尔表达式为 false 时执行 */
+}
+```
+
+```go
+if 布尔表达式1{
+  /* 在布尔表达式1为 true 时执行 */
+} else if 布尔表达式2 {
+  /* 在布尔表达式2为 true 时执行 */
+} else {
+  /* 在两个表达式都为false时，执行 */
+}
+```
+
+实例代码
+
+```go
+package main
+
+import "fmt"
+
+func main(){
+  /* 定义局部变量 */
+  var a int = 10
+
+  /* 使用 if 语句判断布尔表达式 */
+  if a < 20{
+    /* 如果条件为 true ，则执行下面语句 */
+    fmt.Print("a 小于 20\n")
+  }
+  fmt.Print("a 的值为：%d\n", a)
+}
+```
+
+### 2、if变体
+
+如果其中包含一个可选的语句组件（在评估条件之前执行），则还有一个变体。它的语法是
+
+```go
+if statement; condition{
+}
+
+if condition{
+}
+```
+
+实例代码
+```go
+package main
+
+import "fmt"
+
+func main(){
+  if num := 10; num % 2 == 0{
+    fmt.Println(num, "is even")
+  } else {
+    fmt.Println(num, "is odd")
+  }
+}
+```
+
+### 3、switch语句
+
+switch是一个条件语句，它计算表达式并将其与可能匹配的列表进行比较，并根据匹配执行相应的代码块。它可以以被认为是一种惯用的方式来写多个if else子句。
+
+switch语句用于基于不条件执行不同动作，每一个case分支都是唯一的，从上至下逐一测试，直到匹配为止。switch语句执行的过程从上至下，直到直到匹配项，匹配项后面也不需要再加break。
+
+而若switch没有表达式，它会匹配true。
+
+Go中switch默认相当于每个case最后带有break，匹配成功后不会自动向下执行其他case，而是跳出整个switch，但是可以使用fallthrough强制执行后面的case代码。
+
+变量var1可以是任何类型，而val1和val2则可以是同类型的任意值。类型不被局限于常量或整数，但必须是相同的类型；或者最终结果为相同类型的表达式。可以同时测试多个可能符合条件的值，使用逗号分割它们，例如：case val1, val2, val3。
+
+```go
+switch var1 {
+  case val1:
+    ...
+  case val2:
+    ...
+  default:
+    ...
+}
+```
+
+实例代码
+```go
+package main
+
+import "fmt"
+
+func main(){
+  /* 定义局部变量 */
+  var grade string = "B"
+  var marks int = 90
+
+  switch marks {
+    case 90: grade = "A"
+    case 80: grade = "B"
+    case 50, 60, 70: grade = "C"
+    default: grade = "D"
+  }
+
+  switch {
+    case grade == "A" :
+      fmt.Printf("优秀!\n" )     
+    case grade == "B", grade == "C" :
+      fmt.Printf("良好\n" )      
+    case grade == "D" :
+      fmt.Printf("及格\n" )      
+    case grade == "F":
+      fmt.Printf("不及格\n" )
+    default:
+      fmt.Printf("差\n" );
+  }
+  fmt.Printf("你的等级是 %s\n", grade );
+}
+```
+
+### 4、fallthrough
+
+如果贯通后续的case，就添加fallthrough
+
+```go
+package main
+
+import (
+  "fmt"
+)
+
+type data [2]int
+
+func main(){
+  switch x := 5; x{
+    default:
+      fmt.Println(x)
+    case 5:
+      x += 10
+      fmt.Println(x)
+      fallthrough
+    case 6:
+      x += 20
+      fmt.Println(x)
+  }
+}
+```
+
+case中的表达式是可选的，可以省略。如果该表达式被省略，则被认为是switch true，并且每个case表达式都被计算为true，并执行相应的代码块。
+
+示例代码：
+
+```go
+package main
+
+import (  
+    "fmt"
+)
+
+func main() {  
+    num := 75
+    switch { // expression is omitted
+    case num >= 0 && num <= 50:
+        fmt.Println("num is greater than 0 and less than 50")
+    case num >= 51 && num <= 100:
+        fmt.Println("num is greater than 51 and less than 100")
+    case num >= 101:
+        fmt.Println("num is greater than 100")
+    }
+
+}
+```
+
+switch的注意事项
+1. case后的常量值不能重复
+2. case后可以有多个常量值
+3. fallthrough应该是某个case的最后一行。如果它出现在中间的某个地方，编译器就会抛出错误。
+
+### 5、Type Switch
+
+switch语句还可以被用于type-switch来判断某个interface变量中实际存储的变量类型。
+
+```go
+switch x.(type){
+    case type:
+        statement(s);
+    case type:
+        statement(s);
+    /* 可以定义任意多个case */
+    default:
+        statement(s);
+}
+```
+
+实例代码
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main(){
+  var x interface{}
+
+    switch i := x.(type){
+      case nil:
+        fmt.Printf("x 的类型：%T", i)              
+      case int:	  
+         fmt.Printf("x 是 int 型")                       
+      case float64:
+         fmt.Printf("x 是 float64 型")           
+      case func(int) float64:
+         fmt.Printf("x 是 func(int) 型")                      
+      case bool, string:
+         fmt.Printf("x 是 bool 或 string 型" )       
+      default:
+         fmt.Printf("未知型") 
+  }
+}
+```
+
+# 4、循环语句
+
+循环语句表示条件满足，可以反复的执行某些代码
+
+for是唯一的循环语句。（Go没有while循环）
+
+## 4.1 for语句
+
+语法结构
+
+```go
+for init; condition; post{}
+```
+
+初始化语句只执行一次。在初始化循环之后，将检查该条件。如果条件计算为True，那么{}中的循环体将被执行，然后是post语句。post语句将在循环的每次成功迭代之后执行。在执行post语句之后，该条件将被重新检查。如果它是正确的，循环将继续执行，否则循环终止。
+
+实例代码
+```go
+package main
+
+import (
+  "fmt"
+)
+
+func main(){
+    for i := 1; i <= 10; i++ {
+        fmt.Printf(" %d", i)
+    }
+}
+```
+
+在for循环中声明的变量仅在循环范围内可用。因此，i不能在外部访问循环。
+
+## 4.2 for循环变体
+
+所有的三个组成部分，即初始化、条件和post都是可选的。
+
+```go
+for condition {}
+```
+
+效果类似while
+
+```go
+for {}
+```
+
+效果与for(;;)一样
+
+for循环的range格式可以对slice、map、数组、字符串等进行迭代循环
+
+```go
+for key, value := range oldMap {
+    newMap[key] = value
+}
+```
+
+实例代码
+
+```go
+package main
+
+import "fmt"
+
+func main(){
+  var b int = 15
+  var a int
+
+  numbers := [6]int{1, 2, 3, 5}
+
+  /* for循环 */
+  for a := 0; a < 10; a++ {
+    fmt.Printf("a 的值为：%d\n", a)
+  }
+
+  for a < b{
+    a++
+    fmt.Printf("a 的值为：%d\n", a)
+  }
+
+  for i, x := range(numbers) {
+    fmt.Printf("第 %d 位 x 的值 = %d\n", i,x)
+  }
+}
+```
+
+## 4.3 跳出循环的语句
+
+### 1、break语句
+
+break：跳出循环体。break语句用于在结束其正常执行之前突然终止for循环
+
+实例代码
+```go
+package main
+
+import "fmt"
+
+func main(){
+  for i := 1; i <= 10; i++ {
+    if i > 5 {
+      break
+    }
+    fmt.Printf("%d ", i)
+  }
+  fmt.Printf("\nline arter for loop")
+}
+```
+
+### 2、continue语句
+
+continue：跳出一次循环。continue语句用于跳出for循环的当前迭代。在continue语句后面的for循环中的所有代码将不会在当前迭代中执行。循环将继续到下一个迭代
+
+实例代码
+```go
+package main
+
+import (
+  "fmt"
+)
+
+func main(){
+  for i := 1; i <= 10; i++ {
+    if i%2 == 0 {
+      continue
+    }
+    fmt.Printf("%d ", i)
+  }
+}
+```
+
+## 4.4 goto语句
+
+goto：可以无条件地转移到过程中指定的行
+
+语法结构：
+
+```go
+goto label;
+...
+...
+label: statement;
+```
+
+示例代码
+```go
+package main
+
+import "fmt"
+
+func main(){
+  /* 定义局部变量 */
+  var a int = 10
+  
+  /* 循环 */
+  LOOP: for a < 20 {
+    if a == 15 {
+      /* 跳过迭代 */
+      a = a + 1
+      goto LOOP
+    }
+    fmt.Printf("a的值为：%d\n", a)
+    a++
+  }
+}
+```
+
+# 5、数组
+
+## 5.1 什么是数组
+
+Go语言提供了数组类型的数据结构。数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，这种类型可以是任意的原始类型，例如整型、字符串或者自定义类型。
+
+数组元素可以通过索引（位置）来读取（或者修改），索引从0开始，第一个元素索引为0，第二个索引为1，依次类推。数组的下标取值范围是从0开始，到长度减1.
+
+数组一旦定义后，大小不能更改。
+
+## 5.2 数组的语法
+
+声明和初始化数组
+
+需要指明数组的大小和存储的数据类型
+
+```go
+var variable_name [SIZE] variable_type
+```
+
+实例代码：
+
+```go
+var balance [10] float32
+var balance  = [5] float32{1000.0, 2.0, 3.4, 7.0, 50.0}
+```
+
+
+# 6、Slice的使用
+# 7、Map的使用
+# 8、string
+# 9、函数
+# 10、包管理
+# 11、指针
+# 12、结构体
+# 13、方法、接口、OOP编程、type
+# 14、错误处理
