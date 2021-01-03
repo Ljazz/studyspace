@@ -61,6 +61,7 @@
 - [5、数组](#5数组)
   - [5.1 什么是数组](#51-什么是数组)
   - [5.2 数组的语法](#52-数组的语法)
+  - [5.3 多维数组](#53-多维数组)
 - [6、Slice的使用](#6slice的使用)
 - [7、Map的使用](#7map的使用)
 - [8、string](#8string)
@@ -1392,7 +1393,7 @@ Go语言提供了数组类型的数据结构。数组是具有相同唯一类型
 
 ## 5.2 数组的语法
 
-声明和初始化数组
+**声明和初始化数组**
 
 需要指明数组的大小和存储的数据类型
 
@@ -1406,6 +1407,174 @@ var variable_name [SIZE] variable_type
 var balance [10] float32
 var balance  = [5] float32{1000.0, 2.0, 3.4, 7.0, 50.0}
 ```
+
+初始化数组中 *{}* 中的元素个数不饿能大于 *[]* 中的数字。如果忽略 *[]* 中的数字不设置数组大小，Go语言会根据元素的个数来设置数组的大小。
+
+```go
+var balance = []float32 {1000.0, 2.0, 3.4, 7.0, 50.0}
+```
+
+数组的其他创建方式
+
+```go
+  var a [4] float32 // 等价于：var arr2 = [4]float32{}
+  fmt.Println(a) // [0 0 0 0]
+  var b = [5] string{"ruby", "王二狗", "rose"}
+  fmt.Println(b) // [ruby 王二狗 rose  ]
+  var c = [5] int{'A', 'B', 'C', 'D', 'E'} // byte
+  fmt.Println(c) // [65 66 67 68 69]
+  d := [...] int{1,2,3,4,5}// 根据元素的个数，设置数组的大小
+  fmt.Println(d)//[1 2 3 4 5]
+  e := [5] int{4: 100} // [0 0 0 0 100]
+  fmt.Println(e)
+  f := [...] int{0: 1, 4: 1, 9: 1} // [1 0 0 0 1 0 0 0 0 1]
+  fmt.Println(f)
+```
+
+**访问数组元素**
+
+```go
+float32 salary = balance[9]
+```
+
+实例代码
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var n [10]int /* n 是一个长度为 10 的数组 */
+	var i, j int
+
+	/* 为数组 n 初始化元素 */
+	for i = 0; i < 10; i++ {
+		n[i] = i + 100
+	}
+
+	/* 输出每个数组元素的值 */
+	for j = 0; j < 10; j++ {
+		fmt.Printf("Element[%d] = %d\n", j, n[j])
+	}
+}
+```
+运行结果：
+```text
+Element[0] = 100
+Element[1] = 101
+Element[2] = 102
+Element[3] = 103
+Element[4] = 104
+Element[5] = 105
+Element[6] = 106
+Element[7] = 107
+Element[8] = 108
+Element[9] = 109
+```
+
+**数组的长度**
+
+通过将数组作为参数传递给len函数，可以获取数组的长度
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	a := [...]float64{67.7, 89.8, 21, 78}
+	fmt.Println("length of a is ", len(a))
+}
+
+```
+运行结果
+```text
+length of a is 4
+```
+
+设置可以忽略声明中数组的长度并将其替换为`...`，让编译器为你找到长度。
+
+```go
+package main
+
+import (  
+    "fmt"
+)
+
+func main() {  
+    a := [...]int{12, 78, 50} // ... makes the compiler determine the length
+    fmt.Println(a)  // [12 78 50]
+}
+```
+
+遍历数组
+```go
+package main
+
+import "fmt"
+
+func main() {
+	a := [...]float64{67.7, 89.8, 21, 78}
+	for i := 0; i < len(a); i++ { // lopping from 0 to the length of the array
+		fmt.Printf("%d the element of a is %.2f\n", i, a[i])
+	}
+}
+```
+运行结果
+```text
+0 the element of a is 67.70
+1 the element of a is 89.80
+2 the element of a is 21.00
+3 the element of a is 78.00
+```
+
+使用range遍历数组
+```go
+package main
+
+import "fmt"
+
+func main() {
+	a := [...]float64{67.7, 89.8, 21, 78}
+
+	sum := float64(0)
+	for i, v := range a {
+		fmt.Printf("%d the element of a is %.2f\n", i, a[i])
+		sum += v
+	}
+	fmt.Printf("\nsum of all elements of a ", sum)
+}
+```
+运行结果
+```text
+0 the element of a is 67.70
+1 the element of a is 89.80
+2 the element of a is 21.00
+3 the element of a is 78.00
+
+sum of all elements of a %!(EXTRA float64=256.5)
+```
+
+如果只需要值并希望可以忽略索引，那么可以通过使用`_`标识符来替换索引来实现这一点
+```go
+for _, v := range a{//igores index
+}
+```
+
+## 5.3 多维数组
+
+Go语言支持多维数组，以下为常用的多维数组声明语法方式：
+
+```go
+var bariable_name [SIZE][SIZE2]...[SIZEN] variable_type
+```
+
+示例
+```go
+var threedim [5][10][4]int
+```
+
 
 
 # 6、Slice的使用
