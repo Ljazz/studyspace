@@ -1078,11 +1078,67 @@ class Ox(models.Model):
         verbose_name_plural = "oxen"
 ```
 ### 可用的选项
-
+| 选项 | 含义 |
+| --- | --- |
+| abstract | 如果abstract=True，则此模型将是抽象基类 |
+| app\_label | 如果模型是在INSTALLED_APPS中的应用程序之外定义的，则它必须声明它属于那个应用程序：`app_label='myapp'`；若要使用`app_label.object_name`或`app_label.model_name`格式表示模型，则可以分别使用`model._meta.label`或`model._meta.label_lower`。 |
+| base\_manager\_name | 管理器的属性名称，例如“对象”，用于模型的`_base_manager` |
+| db\_table | 用于模型的数据库表的名称 |
+| db\_tablespace | 用于该模型的数据库表空间的名称。默认设置是项目的DEFAULT_TABLESPACE设置（如果已设置）。如果后端不支持表空间，则忽略此选项。 |
+| default\_manager\_name | 用于模型的`_default_manager`的管理器的名称 |
+| default\_related\_name | 默认情况下，将从相关对象到该对象的关系使用的名称。默认值为<model_name>_set。此选项还设置`related_query_name`。由于字段的反向名称应该是唯一的，因此设置时应当谨慎。 |
+| get\_latest\_by | 模型中的字段名称或字段名称列表，通常为DateField，DateTimeField或IntegerField。这指定了腰子模型管理器的`Latest()`和`earlyest()`方法中使用的默认字段。 |
+| managed | 默认为True，这意味着Django将在迁移过程中或在迁移过程中创建适当的数据库表，并将其作为刷新管理命令的一部分删除。即，Django管理数据库表的生命周期。若为False，则不会对此模型执行数据库表创建，修改或删除操作。如果模型表示现有表或通过其他某种方式创建的数据库视图，则此功能很有用。当managed=False时，这是唯一的区别。模型处理的所有其他方面与正常情况完全相同。
+| order\_with\_respect\_to | 使此对象相对于给定字段（通常为ForeignKey）可排序。者可用于使相关对象相对于父对象可排序。 |
+| ordering | 对象的默认顺序，用于在获取对象列表时使用 |
+| permissions | 创建此对象时可进入权限表的额外权限。将自动为每个模型创建添加，更改，删除和查看权限。 |
+| default\_permissions | 默认为（“添加”，“更改”，“删除”，“查看”）。 您可以自定义此列表，例如，如果您的应用不需要任何默认权限，可以将其设置为空列表。 必须先在模型上指定它，然后才能通过迁移创建模型，以防止创建任何遗漏的权限。 |
+| proxy | 如果proxy = True，则子类化另一个模型的模型将被视为代理模型。|
+| required\_db\_features | 当前连接应具有的数据库功能列表，以便在迁移阶段考虑模型。 例如，如果将此列表设置为\['gis_enabled'\]，则该模型将仅在启用GIS的数据库上同步。 在使用多个数据库后端进行测试时，跳过某些模型也很有用。 避免模型之间的关系 |
+| required\_db\_vendor | 该模型特定于的受支持数据库供应商的名称。当前内置的供应商名称是：sqlite，postgresql，mysql，oracle。如果该属性不为空并且当前连接供应商不匹配该模型，则该模型将不同步。 |
+| select_on\_save | 确定Django是否将使用1.6之前的django.db.models.Model.save（）算法。旧算法使用SELECT来确定是否存在要更新的行。新算法直接尝试UPDATE。在极少数情况下，Django无法看到现有行的UPDATE。一个示例是PostgreSQL ON UPDATE触发器，该触发器返回NULL。在这种情况下，即使数据库中存在一行，新算法也将最终执行INSERT。通常不需要设置此属性。默认值为False。|
+| indexes | 要在模型上定义的索引列表 |
+| unique\_together | 字段名称集合必须是唯一的 |
+| index\_together | 使用索引选项。 |
+| constraints | 要在模型上定义的约束列表 |
+| verbose\_name | 对象的人类可读名称，单数形式 |
+| verbose\_name\_plural | 对象的复数名称 |
 
 ## 1.4 模型属性
 
+模型当中最终的属性是 *Manager*。它是Django模型和数据库查询操作之间的接口，并且它被用作从数据库当中获取实例，如果没有指定自定义的 *Manager* ，默认名称是 **ojbects**.Manager只能通过模型类来访问，不能通过模型实例来访问。
+
 ## 1.5 模型方法
+
+```python
+from django.db import models
+
+
+class Person(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    birth_date = models.DateField()
+
+    def baby_boomer_status(self):
+        "Returns the perosn's baby-boomer status"
+        import datetime
+        if self.birth_date < datetime.date(1945, 8, 1):
+            return "Pre-boomer"
+        elif self.birth_date < datetime.date(1965, 1, 1):
+            return "Baby boomer"
+        else:
+            return "Post-boomer"
+    
+    @property
+    def full_name(self):
+        "Returns the person's full name"
+        return "%s %s"%(self.first_name, self.last_name)
+```
+
+**模型方法列表**
+| 方法 | 描述 |
+| --- | --- |
+| 
 
 ### 1.5.1 重写之前定义的模型方法
 
