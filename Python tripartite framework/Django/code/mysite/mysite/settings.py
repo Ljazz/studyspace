@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
 
-    'course_drf',
-    'users_dfr',
+    'app_model',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +122,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "static"
-STATICFILES_DIRS =[
+STATICFILES_DIRS = [
     BASE_DIR / "staticfiles"
 ]
 

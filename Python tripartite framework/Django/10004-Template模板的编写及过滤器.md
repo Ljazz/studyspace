@@ -1,3 +1,15 @@
+<!-- TOC -->
+
+    1. [什么是模板(Template)？模板是如何工作的](#什么是模板template模板是如何工作的)
+    2. [模板(Template)文件的正确位置](#模板template文件的正确位置)
+    3. [模板过滤器Filter](#模板过滤器filter)
+    4. [模板标签Tags](#模板标签tags)
+- [load tags and filters](#load-tags-and-filters)
+  - [模板的继承](#模板的继承)
+  - [模板文件加载静态文件](#模板文件加载静态文件)
+
+<!-- /TOC -->
+
 ## 什么是模板(Template)？模板是如何工作的
 
 Django的模板是静态的html文件，它只决定了一个页面的样式或外观。它需要视图View传递过来的变量(Variable)或内容对象(Context object)才能被渲染成一个完整的页面。好处是是实现了样式与业务逻辑的分离，便于前后端和后端Web开发人员各自完成自己的开发工作。
