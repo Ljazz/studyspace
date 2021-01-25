@@ -27,7 +27,7 @@ class Publisher(models.Model):
 class Book(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField(blank=True, default="")
-    publisher = ForeignKey(Publisher, on_delete=models.CASCADE)
+    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
     add_date = models.DateField()
 
     def __str__(self):

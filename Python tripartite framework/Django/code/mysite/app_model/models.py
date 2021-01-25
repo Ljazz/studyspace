@@ -1,78 +1,77 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import date
+from django.urls import reverse
+from django.utils.timezone import now
+from django.template.defaultfilters import slugify
+import uuid
+import os
 
 
-class Publisher(models.Model):
-    name = models.CharField(max_length=30)
-    address = models.CharField(max_length=60)
+class Article(models.Model):
+    STATUS_CHOICES = (
+        ('d', '草稿'),
+        ('p', '发表'),
+    )
 
-    def __str__(self):
-        return self.name
-
-
-class Book(models.Model):
-    name = models.CharField(max_length=30)
-    description = models.TextField(blank=True, default='')
-    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
-    add_date = models.DateField()
-
-    def __str__(self):
-        return self.name
-
-
-class Restaurant(models.Model):
-    name = models.TextField()
-    address = models.TextField(blank=True, default='')
-    telephone = models.TextField(blank=True, default='')
-    url = models.URLField(blank=True, null=True)
-    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
-    date = models.DateField(default=date.today)
+    title = models.CharField('标题', max_length=200, unique=True)
+    slug = models.SlugField('slug', max_length=60)
+    body = models.TextField('正文')
+    pub_date = models.DateTimeField('发布时间', default=now, null=True)
+    create_date = models.DateTimeField('创建时间', auto_now_add=True)
+    mod_date = models.DateTimeField('修改时间', auto_now=True)
+    status = models.CharField('文章状态', max_length=1, choices=STATUS_CHOICES)
+    views = models.PositiveIntegerField('浏览量', default=0)
+    author = models.ForeignKey(User, verbose_name="作者", on_delete=models.CASCADE)
+    tags = models.ManyToManyField('Tag', verbose_name="标签集合", blank=True)
 
     def __str__(self):
-        return self.name
+        return self.title
 
+    def get_absolute_url(self):
+        return reverse('blog:article_detail', args=[str(self.id)])
 
-class Dish(models.Model):
-    name = models.TextField()
-    description = models.TextField(blank=True, default='')
-    price = models.DecimalField('USD amount', max_digits=8, decimal_places=2, blank=True, null=True)
-    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
-    date = models.DateField(default=date.today)
-    image = models.ImageField(upload_to="myrestaurants", blank=True, null=True)
-    restaurant = models.ForeignKey(Restaurant, null=True, related_name='dishes', on_delete=models.CASCADE)
+    def viewed(self):
+        self.views += 1
+        self.save(update_fields=['views'])
 
-    def __str__(self):
-        return self.name
-
-
-class Review(models.Model):
-    RATING_CHOICES = ((1, 'one'), (2, 'two'), (3, 'three'), (4, 'four'), (5, 'five'))
-    rating = models.PositiveIntegerField('Rating', blank=False, default=3, choices=RATING_CHOICES)
-    comment = models.TextField(blank=True, null=True)
-    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
-    date = models.DateField(default=date.today)
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if not self.slug or not self.id:
+            self.slug = slugify(self.title)
+        super(Article, self).save()
+        # do something
 
     class Meta:
-        abstract = True
+        ordering = ['-pub_date']
+        verbose_name = 'article'
 
 
-class RestaurantReview(Review):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+def user_directory_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = '{}.{}'.format(uuid.uuid4().hex[:10], ext)
+    # return the whole path to the file
+    return os.path.join(instance.user.id, 'avatar', filename)
 
-    def __str__(self):
-        return "{} review".format(self.restaurant.name)
 
-    class Meta:
-        # 按Priority降序，order_date升序
-        get_latest_by = ['-priority', 'order_date']
-        # 自定义数据库里表格的名字
-        db_table = 'music_album'
-        # 按什么排序
-        ordering = ['pub_date']
-        # 定义APP的标签
-        app_label = 'myapp'
-        # 声明此类是否为抽象
-        abstract = True
-        # 添加授权
-        permissions = (("can_deliver_pizzas", "Can deliver pizzas"))
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to=user_directory_path, verbose_name='头像')
+
+
+class AuthorManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(role='A')
+
+
+class EditorManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(role='E')
+
+
+class Person(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    role = models.CharField(max_length=1, choices=(('A', 'Author'), ('E', 'Editor')))
+    objects = models.Manager()
+    authors = AuthorManager()
+    editors = EditorManager()

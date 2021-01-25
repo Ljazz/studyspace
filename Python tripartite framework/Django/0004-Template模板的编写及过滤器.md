@@ -1,12 +1,12 @@
 <!-- TOC -->
 
-    1. [什么是模板(Template)？模板是如何工作的](#什么是模板template模板是如何工作的)
-    2. [模板(Template)文件的正确位置](#模板template文件的正确位置)
-    3. [模板过滤器Filter](#模板过滤器filter)
-    4. [模板标签Tags](#模板标签tags)
+- [什么是模板(Template)？模板是如何工作的](#什么是模板template模板是如何工作的)
+- [模板(Template)文件的正确位置](#模板template文件的正确位置)
+- [模板过滤器Filter](#模板过滤器filter)
+- [模板标签Tags](#模板标签tags)
 - [load tags and filters](#load-tags-and-filters)
-  - [模板的继承](#模板的继承)
-  - [模板文件加载静态文件](#模板文件加载静态文件)
+- [模板的继承](#模板的继承)
+- [模板文件加载静态文件](#模板文件加载静态文件)
 
 <!-- /TOC -->
 

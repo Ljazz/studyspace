@@ -133,7 +133,7 @@ def register(request):
 每个forms类可以通过<font color="orange">clean</font>方法自定义表单验证。若是对某些字段进行验证，可以通过<font color="orange">clean_字段名</font>方式自定义表单验证。如果用户提交数据未通过验证，会返回<font color="orange">ValidationError</font>，并呈现给用户。如果用户提交的数据有效<font color="orange">forms.is_valid()</font>，则会将数据存储在cleaned_data里
 
 ```python
-from jdango import forms
+from django import forms
 from django.contrib.auth.models import User
 import re
 
@@ -143,7 +143,7 @@ def email_check(email):
     return re.match(pattern, email)
 
 
-class RegistrationForm(forms.From):
+class RegistrationForm(forms.Form):
     username = forms.CharField(label="Username", max_length=50)
     email = forms.EmailField(label="Email")
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
@@ -153,7 +153,7 @@ class RegistrationForm(forms.From):
     def clean_usernmae(self):
         username = self.cleaned_data.get('username')
 
-        if lenI(username) < 6:
+        if len(username) < 6:
             raise forms.ValidationError("Your username must be at least 6 characters long.")
         elif len(username) > 50:
             raise forms.ValidationError("Your username is too long.")
@@ -294,7 +294,7 @@ from .forms import BookFormSet
 from django.shortcuts import render
 
 
-def manage_books(requests):
+def manage_books(request):
     if request.method == 'POST':
         formset = BookFormSet(request.POST, request.FILES)
         if formset.is_valid():
@@ -305,7 +305,7 @@ def manage_books(requests):
 ```
 
 模板中使用
-```python
+```html
 <form action="." method="POST">
 {{ formset }}
 </form>
