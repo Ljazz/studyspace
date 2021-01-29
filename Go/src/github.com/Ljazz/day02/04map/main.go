@@ -34,5 +34,8 @@ func main() {
 		fmt.Println(v)
 	}
 
-	//
+	// map删除
+	delete(m1, "jiwuming")
+	delete(m1, "zhangwuming")
+	fmt.Println(m1)
 }
