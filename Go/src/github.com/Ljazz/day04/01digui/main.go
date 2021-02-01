@@ -2,23 +2,23 @@ package main
 
 import "fmt"
 
-type student struct {
-	name string
-	age  int
+// 递归：函数自己调用自己
+
+func Factorial(n uint64) (result uint64) {
+	if n <= 1 {
+		return 1
+	}
+	return n * Factorial(n-1)
+}
+
+func fibonacci(n uint64) uint64 {
+	if n < 2 {
+		return n
+	}
+	return fibonacci(n-1) + fibonacci(n-2)
 }
 
 func main() {
-	m := make(map[string]*student)
-	stus := []student{
-		{name: "小王子", age: 18},
-		{name: "娜扎", age: 23},
-		{name: "大王八", age: 9000},
-	}
-
-	for _, stu := range stus {
-		m[stu.name] = &stu
-	}
-	for k, v := range m {
-		fmt.Println(k, "=>", v.name)
-	}
+	ret := Factorial(5)
+	fmt.Println(ret)
 }
