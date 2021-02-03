@@ -1,3 +1,7 @@
+实验环境
+- CentOS8.2
+- Docker Version：20.10.3
+
 ### 1. 拉取rabbitmq:3.8.9版本镜像
 
 ```bash
