@@ -1,0 +1,42 @@
+FROM ubuntu:20.04
+# 作者信息
+MAINTAINER guowei "32928527@qq.com"
+
+# 修改更新源为阿里云
+ADD sources.list /etc/apt/sources.list
+
+# 前端
+ADD CHARGE_SERVICE_VUE/ /home/project/xiangyun/CHARGE_SERVICE_VUE/
+# 后端
+ADD recharge_platform/ /home/project/xiangyun/recharge_platform/
+# python包管理requirements
+COPY requirements.txt /home/project
+# supervisord配置文件supervisord.conf
+COPY supervisord.conf /home/project
+
+# 设置系统时区
+ENV TZ Asia/Shanghai
+
+# 设置语言
+ENV LANG C.UTF-8
+ENV LANGUAGE C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# 安装基础环境
+# 层数最多127层  可使用 && 拼接
+RUN apt-get clean && apt-get update --fix-missing && apt-get upgrade -y
+RUN apt-get install -y tzdata locales cron vim wget dos2unix zlib1g-dev build-essential nginx supervisor python-dev python-pip libmysqlclient-dev libpcre3 libpcre3-dev gcc
+RUN mkdir /usr/local/python3.8
+RUN wget https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz && tar xvf Python-3.8.5.tar.xz && cd ./Python–3.8.5 && ./configure --prefix=/usr/local/python3.8 && make && make install && ln -sf /usr/local/python3.8/bin/python3.8 /usr/bin/python3.8
+RUN wget https://bootstrap.pypa.io/get-pip.py && python3.8 get-pip.py && ln -sf /usr/local/python3.8/bin/pip3.8 /usr/bin/pip3.8
+RUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple -r /home/project/requirements.txt
+
+# 设置映射端口（映射多个端口时，继续添加EXPOSE即可）
+EXPOSE 10005 10006 10007 10008 10009
+
+# 设置映射目录
+VOLUME /mnt/logs
+
+# supervisord启动
+# COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# CMD ["/usr/bin/supervisord"]

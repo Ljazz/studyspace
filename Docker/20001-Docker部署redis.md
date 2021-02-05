@@ -29,3 +29,8 @@ sudo docker run -itd --name redis -p 6379:6379 -v /mnt/docker/redis/data:/data -
 - `requirepass`：设置登录密码
 - `-v /root/docker/redis/data:data`：映射数据目录
 - `--appendonly yes`：开启数据持久化
+
+
+### 相关命令
+
+- `docker update --restart always 容器ID/容器名`

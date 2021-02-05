@@ -2,6 +2,7 @@
 
 - [Ubuntu安装Docker](#ubuntu安装docker)
 - [红帽RHEL安装docker容器](#红帽rhel安装docker容器)
+- [CentOS8安装docker](#centos8安装docker)
 
 <!-- /TOC -->
 
@@ -74,4 +75,31 @@ $ curl -sSLhttps://get.docker.com/ | sh
 
 ```bash
 $ sudo service docker start
+```
+
+# CentOS8安装docker
+
+1. 下载docker-ce的repo
+
+```bash
+curl https://download.docker.com/linux/centos/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
+```
+
+2. 安装依赖
+
+```bash
+yum install https://download.docker.com/linux/Fedora/30/x86_64/stable/Packages/containerd.io-1.2.6-3.3.fc30.x86_64.rpm
+```
+
+3. 安装docker-ce
+
+```bash
+yum install docker-ce
+```
+
+4. 启动docker
+
+```bash
+systemctl start docker
+systemctl enable docker
 ```
