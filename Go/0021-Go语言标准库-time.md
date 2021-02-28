@@ -1,3 +1,20 @@
+<!-- TOC -->
+
+- [time包](#time包)
+  - [时间类型](#时间类型)
+  - [时间戳](#时间戳)
+  - [时间间隔](#时间间隔)
+  - [时间操作](#时间操作)
+    - [Add](#add)
+    - [Sub](#sub)
+    - [Equal](#equal)
+    - [Before](#before)
+    - [After](#after)
+  - [定时器](#定时器)
+  - [时间格式化](#时间格式化)
+
+<!-- /TOC -->
+
 # time包
 
 time包提供了时间的显示和测量用的函数。日历的计算采用的是公历
@@ -126,3 +143,52 @@ func (t Time) After(u Time) bool
 
 使用`time.Tick(时间间隔)`来设置定时器，定时器的本质上是一个通道(channel)。
 
+```go
+func tickDemo() {
+    ticker := time.Tick(time.Second) // 定义一个1秒间隔的定时器
+    for i := range ticker {
+        fmt.Println(i) // 每秒都会执行的任务
+    }
+}
+```
+
+## 时间格式化
+
+时间类型有一个自带的方法`Format`进行格式化，需要注意的是Go中格式化时间模板不是常见的`Y-m-d H:M:S`而是使用Go的诞生时间2006年1月2日15点04分）。
+
+如果想要格式化为12小时方式，需要指定`PM`
+
+```go
+func FormatDemo() {
+    now := time.Now()
+    // 格式化的模板为Go的出生时间2006年1月2号15点04分 Mon Jan
+	// 24小时制
+	fmt.Println(now.Format("2006-01-02 15:04:05.000 Mon Jan"))
+	// 12小时制
+	fmt.Println(now.Format("2006-01-02 03:04:05.000 PM Mon Jan"))
+	fmt.Println(now.Format("2006/01/02 15:04"))
+	fmt.Println(now.Format("15:04 2006/01/02"))
+	fmt.Println(now.Format("2006/01/02"))
+}
+```
+
+<font color='red' size='4px'>解析字符串格式的时间</font>
+
+```go
+now := time.Now()
+fmt.Println(now)
+// 加载时区
+loc, err := time.LoadLocation("Asia/Shanghai")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+// 按照指定时区和指定格式解析字符串时间
+timeObj, err := time.ParseInLocation("2006/01/02 15:04:05", "2019/08/04 14:15:20", loc)
+if err != nil {
+    fmt.Println(err)
+    return
+}
+fmt.Println(timeObj)
+fmt.Println(timeObj.Sub(now))
+```
