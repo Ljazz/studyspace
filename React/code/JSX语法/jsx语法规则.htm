@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jsx语法规则</title>
+</head>
+<body>
+    <!-- 准备好一个“容器” -->
+    <div id="demo"></div>
+
+    <!-- 引入react核心库 -->
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <!-- 引入react-dom 用于支持react操作DOM -->
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <!-- 引入Babel 用于将JSX转为JS -->
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel"> /* 此处一定要写Babel */
+        // 1. 创建虚拟DOM
+        const VDOM = (
+            <h1>Hello React</h1>
+        )
+        // 2. 渲染虚拟DOM到页面
+        ReactDOM.render(VDOM, document.getElementById('demo'))
+    </script>
+</body>
+</html>
+
+p127
