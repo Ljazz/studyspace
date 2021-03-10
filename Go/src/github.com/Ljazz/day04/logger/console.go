@@ -12,8 +12,8 @@ type ConsoleLogger struct {
 	Level LogLevel
 }
 
-// NewLog 构造函数
-func NewLog(levelStr string) ConsoleLogger {
+// NewConsoleLogger 构造函数
+func NewConsoleLogger(levelStr string) ConsoleLogger {
 	level, err := parseLogLevel(levelStr)
 	if err != nil {
 		panic(err)
@@ -36,6 +36,7 @@ func (c ConsoleLogger) log(lv LogLevel, format string, a ...interface{}) {
 	}
 }
 
+// Debug级别日志
 func (c ConsoleLogger) Debug(format string, a ...interface{}) {
 	// if c.enable(DEBUG) {
 	// 	now := time.Now()

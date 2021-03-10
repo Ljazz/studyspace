@@ -6,12 +6,19 @@ import (
 	"path"
 	"runtime"
 	"strings"
-	"time"
 )
 
 // 这是一个日志库
 
 type LogLevel uint16
+
+type Logger interface {
+	Debug(format string, a ...interface{})
+	Info(format string, a ...interface{})
+	Warning(format string, a ...interface{})
+	Error(format string, a ...interface{})
+	Fatal(format string, a ...interface{})
+}
 
 const (
 	UNKNOWN LogLevel = iota
@@ -23,7 +30,7 @@ const (
 	FATAL
 )
 
-func parseLogLevel(s string) LogLevel {
+func parseLogLevel(s string) (LogLevel, error) {
 	s = strings.ToLower(s)
 	switch s {
 	case "debug":
@@ -68,8 +75,8 @@ func getInfo(skip int) (funcName, fileName string, lineNoe int) {
 		fmt.Printf("runtime.Caller() failed\n")
 		return
 	}
-	funcName = runtime.FuncForPC(pc).Name
-	fileName = path.Base(fileName)
+	funcName = runtime.FuncForPC(pc).Name()
+	fileName = path.Base(file)
 	// funcName = strings.Split(funcName, ".")[1]
 	return
 }
