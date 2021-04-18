@@ -12,7 +12,7 @@
 10. 云
 
 
-go:     87
+go:     96
 react:  010
 
 go install github.com/ramya-rao-a/go-outline@latest
