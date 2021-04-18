@@ -1,0 +1,3 @@
+<h1 style="color:red">hell Golang!</h1>
+
+<a href="https://sogou.com">点我去搜狗</a>
