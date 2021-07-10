@@ -41,7 +41,8 @@ func init() {
 }
 
 func insert() {
-	ret, err := db.Exec(`insert into person(username, sex, email) values("stu001", "man", "stu01@qq.com")`)
+	sqlStr := `insert into person(username, sex, email) values("stu001", "man", "stu01@qq.com");`
+	ret, err := db.Exec(sqlStr)
 	if err != nil {
 		fmt.Println("exec failed: ", err)
 		return
