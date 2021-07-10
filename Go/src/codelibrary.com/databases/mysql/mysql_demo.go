@@ -40,12 +40,12 @@ func init() {
 }
 
 func insert() {
-	r, err := db.Exec(`insert into person(username, sex, email)values("stu001", "man", "stu01@qq.com")`)
+	ret, err := db.Exec(`insert into person(username, sex, email)values("stu001", "man", "stu01@qq.com")`)
 	if err != nil {
 		fmt.Println("exec failed: ", err)
 		return
 	}
-	id, err := r.LastInsertId()
+	id, err := ret.LastInsertId()
 	if err != nil {
 		fmt.Println("exec failed: ", err)
 		return
