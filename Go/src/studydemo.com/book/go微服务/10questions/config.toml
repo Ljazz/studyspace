@@ -1,0 +1,14 @@
+[windows]
+rootDir = "E:/studyspace/Go/src/studydemo.com/book/go微服务/10综合案例"
+port = "8000"
+dbdebug = true
+
+[windows]
+rootDir = "/Users/Go/src/studydemo.com/book/go微服务/10综合案例"
+port = "8000"
+dbdebug = true
+
+[windows]
+rootDir = ""
+port = "8000"
+dbdebug = false
