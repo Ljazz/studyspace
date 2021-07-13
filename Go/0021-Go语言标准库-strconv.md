@@ -1,3 +1,26 @@
+<!-- TOC -->
+
+- [1 strconv包](#1-strconv包)
+  - [1.1 string与int类型转换](#11-string与int类型转换)
+    - [1.1.1 Atoi()](#111-atoi)
+    - [1.1.2 Itoa()](#112-itoa)
+  - [1.2 Parse系列函数](#12-parse系列函数)
+    - [1.2.1 ParseBool()](#121-parsebool)
+    - [1.2.2 ParseInt()](#122-parseint)
+    - [1.2.3 ParseUint()](#123-parseuint)
+    - [1.2.4 ParseFloat()](#124-parsefloat)
+  - [1.3 Format系列函数](#13-format系列函数)
+    - [1.3.1 FormatBool()](#131-formatbool)
+    - [1.3.2 FormatInt()](#132-formatint)
+    - [1.3.3 FormatUint()](#133-formatuint)
+    - [1.3.4 FormatFloat()](#134-formatfloat)
+  - [1.4 其他](#14-其他)
+    - [1.4.1 IsPrint()](#141-isprint)
+    - [1.4.2 CanBackquote()](#142-canbackquote)
+    - [1.4.3 其他](#143-其他)
+
+<!-- /TOC -->
+
 # 1 strconv包
 
 strconv包实现了基本数据类型与其字符串表示的转换，主要有以下常用函数： `Atoi()`、`Itia()`、parse系列、format系列、append系列。

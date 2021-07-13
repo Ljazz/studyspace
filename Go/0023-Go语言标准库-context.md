@@ -1,3 +1,25 @@
+<!-- TOC -->
+
+- [1 为什么需要Context](#1-为什么需要context)
+  - [1.1 基本示例](#11-基本示例)
+  - [1.2 全局变量方式](#12-全局变量方式)
+  - [1.3 通道方式](#13-通道方式)
+  - [1.4 官方版的方案](#14-官方版的方案)
+- [2 Context初识](#2-context初识)
+- [3 Context接口](#3-context接口)
+  - [3.1 Background()和TODO（）](#31-background和todo)
+- [4 With系列函数](#4-with系列函数)
+  - [4.1 WithCancel](#41-withcancel)
+  - [4.2 WithDeadline](#42-withdeadline)
+  - [4.3 WithTimeout](#43-withtimeout)
+  - [4.4 WithValue](#44-withvalue)
+- [5 使用Context的注意事项](#5-使用context的注意事项)
+- [6 客户端超时取消示例](#6-客户端超时取消示例)
+  - [server端](#server端)
+  - [client端](#client端)
+
+<!-- /TOC -->
+
 # 1 为什么需要Context
 
 ## 1.1 基本示例
@@ -298,8 +320,8 @@ func main() {
     d := time.Now().Add(50 * time.Millisecond)
     ctx, cancel := context.WithDeadline(context.Background(), d)
 
-    // 尽管ctx会过期，但在任何情况下调用它的cancel函数都是很好的实践。
-    // 如果不这样做，可能会使上下文及其父类存活的时间超过必要的时间。
+	// 尽管ctx会过期，但在任何情况下调用它的cancel函数都是很好的实践。
+	// 如果不这样做，可能会使上下文及其父类存活的时间超过必要的时间。
     defer cancel()
 
     select {
